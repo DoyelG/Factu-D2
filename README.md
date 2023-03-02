@@ -1,4 +1,4 @@
-![Facturador: Script para no tener que facturar manualmente]
+Facturador: Script para no tener que facturar manualmente
 
 # Facturador script
 
@@ -26,12 +26,12 @@ Para poder correr el script, necesitamos:
   {Nro Cuil} | {Nro Condicion}
   {Nro Cuil} | {Nro Condicion}
   {Nro Cuil} | {Nro Condicion}
-# Los numeros de condicion para tener referencia son:
-# Responsable Inscripto = 1
-# Consumidor Final = 3
-# Si queremos hacer una factura a consumidor final sin especificar a quien, dejamos el Nro de Cuil vacio y Condicion = 3
+### Los numeros de condicion para tener referencia son:
+### Responsable Inscripto = 1
+### Consumidor Final = 3
+### Si queremos hacer una factura a consumidor final sin especificar a quien, dejamos el Nro de Cuil vacio y Condicion = 3
 
-## Installation
+# Installation
 
 # Python
 https://www.python.org/downloads/
@@ -45,8 +45,8 @@ Windows -> https://www.geeksforgeeks.org/how-to-install-pip-on-windows/?ref=rp
 Linux -> https://www.geeksforgeeks.org/how-to-install-pip-in-linux/?ref=rp
 
 ## Usage
-
+```
 SCENARIO User open the terminal console
 THEN User goes into the folder where the script is placed `cd {folderPath}`
 THEN User runs the script `python3 facturar.py`
-
+```
