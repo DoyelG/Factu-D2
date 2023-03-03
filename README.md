@@ -1,6 +1,6 @@
 Facturador: Script para no tener que facturar manualmente
 
-# Facturador script
+# Facturito
 
 ## Introduction
 
