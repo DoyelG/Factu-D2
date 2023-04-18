@@ -61,7 +61,7 @@ def logIn():
     accountPassword = findElement("//input[@id='F1:password']")
     accountPassword.send_keys(PASS)
     findElementAndClick("//input[@id='F1:btnIngresar']")
-    findElementAndClick("//input[@value='GUSMEROTTI DOYEL LEON']")
+    findElementAndClick("//input[@value='GUSMEROTTI DOYEL LEON']") # TODO: Remplazar valor por variable proveniente de CSV
 
 def generarFactura(cuil, condicion):
     findElementAndClick("//a[@id='btn_gen_cmp']")
