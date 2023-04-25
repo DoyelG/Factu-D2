@@ -17,6 +17,8 @@ accountData = read_csv('account.csv', dtype=str)
 CUIL = accountData['CUIL'].tolist()[0]
 PASS = accountData['PASSWORD'].tolist()[0]
 
+companyData = read_csv('company.csv', dtype=str)
+COMPANY = companyData['COMPANY'].tolist()[0]
 
 class cliente:
     def __init__(self, cuil, condicion):
@@ -61,7 +63,7 @@ def logIn():
     accountPassword = findElement("//input[@id='F1:password']")
     accountPassword.send_keys(PASS)
     findElementAndClick("//input[@id='F1:btnIngresar']")
-    findElementAndClick("//input[@value='GUSMEROTTI DOYEL LEON']") # TODO: Remplazar valor por variable proveniente de CSV
+    findElementAndClick("//input[@value='" + COMPANY + "']")
 
 def generarFactura(cuil, condicion):
     findElementAndClick("//a[@id='btn_gen_cmp']")

@@ -1,6 +1,6 @@
 Facturador: Script para no tener que facturar manualmente
 
-# Facturito
+# FactuD2
 
 ## Introduction
 
@@ -29,6 +29,9 @@ Para poder correr el script, necesitamos:
 ### Los numeros de condicion para tener referencia son:
 ### Responsable Inscripto = 1
 ### Consumidor Final = 3
+- CSV con nombre "company" con el nombre de la entidad para la cual generas las facturas con el formato:
+  COMPANY
+  {Nombre de la entidad}
 ### Si queremos hacer una factura a consumidor final sin especificar a quien, dejamos el Nro de Cuil vacio y Condicion = 3
 
 # Installation
@@ -48,5 +51,5 @@ Linux -> https://www.geeksforgeeks.org/how-to-install-pip-in-linux/?ref=rp
 ```
 SCENARIO User open the terminal console
 THEN User goes into the folder where the script is placed `cd {folderPath}`
-THEN User runs the script `python3 facturar.py`
+THEN User runs the script `python3 factuD2.py`
 ```
