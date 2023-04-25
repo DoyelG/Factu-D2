@@ -20,22 +20,22 @@ PASS = accountData['PASSWORD'].tolist()[0]
 companyData = read_csv('company.csv', dtype=str)
 COMPANY = companyData['COMPANY'].tolist()[0]
 
-class cliente:
-    def __init__(self, cuil, condicion):
+class customer:
+    def __init__(self, cuil, condition):
         self.cuil = cuil
-        self.condicion = condicion
+        self.condition = condition
 
 customersData = read_csv('clients.csv', dtype=str)
 customersCuil = customersData['CUIL'].tolist()
 customersCondition = customersData['CONDICION'].tolist()
 
-listaDeClientes = []
+clientsList = []
 for index, client in enumerate(customersCuil):
     customerCuil = str(customersCuil[index])
     customerCondition = customersCondition[index]
     if len(customerCuil) < 5:
         customerCuil = ""
-    listaDeClientes.append(cliente(customerCuil, customerCondition))
+    clientsList.append(customer(customerCuil, customerCondition))
 
 
 def findElement(path):
@@ -50,9 +50,9 @@ def findElementAndClick(path):
     driver.implicitly_wait(10)
     return
 
-def continuar():
-    continuar = findElement("//input[@value='Continuar >']")
-    continuar.click()
+def nextStep():
+    nextStep = findElement("//input[@value='Continuar >']")
+    nextStep.click()
     time.sleep(0.5)
     return
 
@@ -65,42 +65,44 @@ def logIn():
     findElementAndClick("//input[@id='F1:btnIngresar']")
     findElementAndClick("//input[@value='" + COMPANY + "']")
 
-def generarFactura(cuil, condicion):
+def generateInvoice(cuil, condition):
     findElementAndClick("//a[@id='btn_gen_cmp']")
     time.sleep(0.9)
-    puntoDeVenta = Select(findElement("//select[@id='puntodeventa']"))
+    sellPoint = Select(findElement("//select[@id='puntodeventa']"))
     time.sleep(0.9)
-    puntoDeVenta.select_by_index('1')
+    sellPoint.select_by_index('1')
     time.sleep(0.5)
-    continuar()
+    nextStep()
 
-    concepto = Select(findElement("//select[@id='idconcepto']"))
-    concepto.select_by_index('2')
+    concept = Select(findElement("//select[@id='idconcepto']"))
+    concept.select_by_index('2')
     findElementAndClick("//input[@id='fsd_btn']")
-    findElementAndClick("//td[contains(text(),'1') and contains(@class, 'day') and not(contains(@class, 'othermonth'))]")
+    currentMonthDaysSince = findElements("//td[contains(@class, 'day') and not(contains(@class, 'othermonth')) and not(contains(@class, 'wn')) and not(contains(@class, 'name'))]")
+    currentMonthDaysSince[0].click()
+    time.sleep(0.5)
     findElementAndClick("//input[@id='fsh_btn']")
-    currentMonthDays = findElements("//td[contains(@class, 'day') and not(contains(@class, 'othermonth')) and not(contains(@class, 'wn'))]")
-    currentMonthDays[-1].click()
-    continuar()
+    currentMonthDaysTo = findElements("//td[contains(@class, 'day') and not(contains(@class, 'othermonth')) and not(contains(@class, 'wn')) and not(contains(@class, 'name'))]")
+    currentMonthDaysTo[-1].click()
+    nextStep()
 
-    condicionIVA = Select(findElement("//select[@id='idivareceptor']"))
-    condicionIVA.select_by_index(condicion)
+    conditionIVA = Select(findElement("//select[@id='idivareceptor']"))
+    conditionIVA.select_by_index(condition)
     cuilInput = findElement("//input[@id='nrodocreceptor']")
     cuilInput.send_keys(cuil)
     findElementAndClick("//form[@id='formulario']")
     time.sleep(0.5)
     findElementAndClick("//input[@id='formadepago1']")
-    continuar()
+    nextStep()
 
-    servicio = findElement("//textarea[@id='detalle_descripcion1']")
-    servicio.send_keys("Servicios Informaticos")
+    service = findElement("//textarea[@id='detalle_descripcion1']")
+    service.send_keys("Servicios Informaticos")
     driver.implicitly_wait(100)
     seleccionUnidad = Select(findElement("//select[@id='detalle_medida1']"))
     seleccionUnidad.select_by_index('7')
     driver.implicitly_wait(100)
-    monto = findElement("//input[@id='detalle_precio1']")
-    monto.send_keys("20000")
-    continuar()
+    amount = findElement("//input[@id='detalle_precio1']")
+    amount.send_keys("20000")
+    nextStep()
 
     findElementAndClick("//input[@id='btngenerar']")
     time.sleep(0.9)
@@ -113,7 +115,7 @@ def generarFactura(cuil, condicion):
 driver.get("https://auth.afip.gov.ar/contribuyente_/login.xhtml?action=SYSTEM&system=rcel")
 
 logIn()
-for cliente in listaDeClientes:
-    generarFactura(cliente.cuil, cliente.condicion)
+for client in clientsList:
+    generateInvoice(client.cuil, client.condition)
 
 input('Press ENTER to exit')
