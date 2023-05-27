@@ -5,12 +5,13 @@ from selenium.webdriver.support.ui import Select
 from pandas import *
 import time
 
+options = webdriver.ChromeOptions();
 
-driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
-options = webdriver.ChromeOptions()
-options.add_argument("start-maximized")
-options.add_argument("disable-infobars")
-options.add_argument("--disable-extensions")
+prefs = {"download.default_directory" : "/Users/tomas/Documents/Facturas"}
+options.add_experimental_option("prefs", prefs);
+driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+
+
 
 
 accountData = read_csv("account.csv", dtype=str)
@@ -22,14 +23,15 @@ COMPANY = companyData["COMPANY"].tolist()[0]
 
 
 class customer:
-    def __init__(self, cuil, condition):
+    def __init__(self, cuil, condition, total):
         self.cuil = cuil
         self.condition = condition
-
+        self.total = total
 
 customersData = read_csv("clients.csv", dtype=str)
 customersCuil = customersData["CUIL"].tolist()
 customersCondition = customersData["CONDICION"].tolist()
+customersTotal = customersData["TOTAL"].tolist()
 
 clientsList = []
 for index, client in enumerate(customersCuil):
@@ -37,7 +39,8 @@ for index, client in enumerate(customersCuil):
     customerCondition = customersCondition[index]
     if len(customerCuil) < 5:
         customerCuil = ""
-    clientsList.append(customer(customerCuil, customerCondition))
+    customerTotal = customersTotal[index]
+    clientsList.append(customer(customerCuil, customerCondition, customerTotal))
 
 
 def findElement(path):
@@ -72,7 +75,7 @@ def logIn():
     findElementAndClick("//input[@value='" + COMPANY + "']")
 
 
-def generateInvoice(cuil, condition):
+def generateInvoice(cuil, condition, total):
     findElementAndClick("//a[@id='btn_gen_cmp']")
     time.sleep(0.9)
     sellPoint = Select(findElement("//select[@id='puntodeventa']"))
@@ -88,7 +91,6 @@ def generateInvoice(cuil, condition):
         "//td[contains(@class, 'day') and not(contains(@class, 'othermonth')) and not(contains(@class, 'wn')) and not(contains(@class, 'name'))]"
     )
     currentMonthDaysSince[0].click()
-    time.sleep(0.5)
     findElementAndClick("//input[@id='fsh_btn']")
     currentMonthDaysTo = findElements(
         "//td[contains(@class, 'day') and not(contains(@class, 'othermonth')) and not(contains(@class, 'wn')) and not(contains(@class, 'name'))]"
@@ -97,13 +99,15 @@ def generateInvoice(cuil, condition):
     nextStep()
 
     conditionIVA = Select(findElement("//select[@id='idivareceptor']"))
-    conditionIVA.select_by_index(condition)
+    conditionIVA.select_by_value(condition)
+
     cuilInput = findElement("//input[@id='nrodocreceptor']")
     cuilInput.send_keys(cuil)
     findElementAndClick("//form[@id='formulario']")
     time.sleep(0.5)
-    findElementAndClick("//input[@id='formadepago1']")
+    findElementAndClick("//input[@id='formadepago4']")
     nextStep()
+    
 
     service = findElement("//textarea[@id='detalle_descripcion1']")
     service.send_keys("Servicios Informaticos")
@@ -112,14 +116,17 @@ def generateInvoice(cuil, condition):
     seleccionUnidad.select_by_index("7")
     driver.implicitly_wait(100)
     amount = findElement("//input[@id='detalle_precio1']")
-    amount.send_keys("20000")
+    amount.send_keys(total)
+
     nextStep()
 
     findElementAndClick("//input[@id='btngenerar']")
     time.sleep(0.9)
     driver.switch_to.alert.accept()
     time.sleep(0.9)
-
+    findElementAndClick("//input[@value='Imprimir...']")
+    time.sleep(3)
+    
     findElementAndClick("//input[@value='Menú Principal']")
 
 
@@ -128,7 +135,8 @@ driver.get(
 )
 
 logIn()
+
 for client in clientsList:
-    generateInvoice(client.cuil, client.condition)
+    generateInvoice(client.cuil, client.condition, client.total)
 
 input("Press ENTER to exit")
