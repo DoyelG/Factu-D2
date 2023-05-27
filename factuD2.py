@@ -23,24 +23,25 @@ COMPANY = companyData["COMPANY"].tolist()[0]
 
 
 class customer:
-    def __init__(self, cuil, condition, total):
+    def __init__(self, cuil, condition, amount):
         self.cuil = cuil
         self.condition = condition
-        self.total = total
+        self.amount = amount
+
 
 customersData = read_csv("clients.csv", dtype=str)
 customersCuil = customersData["CUIL"].tolist()
-customersCondition = customersData["CONDICION"].tolist()
-customersTotal = customersData["TOTAL"].tolist()
+customersCondition = customersData["CONDITION"].tolist()
+customersAmount = customersData["AMOUNT"].tolist()
 
 clientsList = []
 for index, client in enumerate(customersCuil):
     customerCuil = str(customersCuil[index])
     customerCondition = customersCondition[index]
+    customerAmount = customersAmount[index]
     if len(customerCuil) < 5:
         customerCuil = ""
-    customerTotal = customersTotal[index]
-    clientsList.append(customer(customerCuil, customerCondition, customerTotal))
+    clientsList.append(customer(customerCuil, customerCondition, customerAmount))
 
 
 def findElement(path):
@@ -75,7 +76,7 @@ def logIn():
     findElementAndClick("//input[@value='" + COMPANY + "']")
 
 
-def generateInvoice(cuil, condition, total):
+def generateInvoice(cuil, condition, amount):
     findElementAndClick("//a[@id='btn_gen_cmp']")
     time.sleep(0.9)
     sellPoint = Select(findElement("//select[@id='puntodeventa']"))
@@ -115,9 +116,8 @@ def generateInvoice(cuil, condition, total):
     seleccionUnidad = Select(findElement("//select[@id='detalle_medida1']"))
     seleccionUnidad.select_by_index("7")
     driver.implicitly_wait(100)
-    amount = findElement("//input[@id='detalle_precio1']")
-    amount.send_keys(total)
-
+    amountInput = findElement("//input[@id='detalle_precio1']")
+    amountInput.send_keys(amount)
     nextStep()
 
     findElementAndClick("//input[@id='btngenerar']")
@@ -137,6 +137,6 @@ driver.get(
 logIn()
 
 for client in clientsList:
-    generateInvoice(client.cuil, client.condition, client.total)
+    generateInvoice(client.cuil, client.condition, client.amount)
 
 input("Press ENTER to exit")
