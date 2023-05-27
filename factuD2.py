@@ -5,12 +5,13 @@ from selenium.webdriver.support.ui import Select
 from pandas import *
 import time
 
+options = webdriver.ChromeOptions();
 
-driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
-options = webdriver.ChromeOptions()
-options.add_argument("start-maximized")
-options.add_argument("disable-infobars")
-options.add_argument("--disable-extensions")
+prefs = {"download.default_directory" : "/Users/tomas/Documents/Facturas"}
+options.add_experimental_option("prefs", prefs);
+driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+
+
 
 
 accountData = read_csv("account.csv", dtype=str)
@@ -91,7 +92,6 @@ def generateInvoice(cuil, condition, amount):
         "//td[contains(@class, 'day') and not(contains(@class, 'othermonth')) and not(contains(@class, 'wn')) and not(contains(@class, 'name'))]"
     )
     currentMonthDaysSince[0].click()
-    time.sleep(0.5)
     findElementAndClick("//input[@id='fsh_btn']")
     currentMonthDaysTo = findElements(
         "//td[contains(@class, 'day') and not(contains(@class, 'othermonth')) and not(contains(@class, 'wn')) and not(contains(@class, 'name'))]"
@@ -100,13 +100,15 @@ def generateInvoice(cuil, condition, amount):
     nextStep()
 
     conditionIVA = Select(findElement("//select[@id='idivareceptor']"))
-    conditionIVA.select_by_index(condition)
+    conditionIVA.select_by_value(condition)
+
     cuilInput = findElement("//input[@id='nrodocreceptor']")
     cuilInput.send_keys(cuil)
     findElementAndClick("//form[@id='formulario']")
     time.sleep(0.5)
-    findElementAndClick("//input[@id='formadepago1']")
+    findElementAndClick("//input[@id='formadepago4']")
     nextStep()
+    
 
     service = findElement("//textarea[@id='detalle_descripcion1']")
     service.send_keys("Servicios Informaticos")
@@ -122,7 +124,9 @@ def generateInvoice(cuil, condition, amount):
     time.sleep(0.9)
     driver.switch_to.alert.accept()
     time.sleep(0.9)
-
+    findElementAndClick("//input[@value='Imprimir...']")
+    time.sleep(3)
+    
     findElementAndClick("//input[@value='Menú Principal']")
 
 
@@ -131,6 +135,7 @@ driver.get(
 )
 
 logIn()
+
 for client in clientsList:
     generateInvoice(client.cuil, client.condition, client.amount)
 
