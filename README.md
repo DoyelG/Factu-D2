@@ -20,12 +20,12 @@ Para poder correr el script, necesitamos:
 
 - CSV con nombre "account" con usuario y contraseña en la misma carpeta que nuestro script, con el formato:
   CUIL       | PASSWORD
-  {Nro Cuil} | {Password}
+  {Cuil Number} | {Password}
 - CSV con nombre "clients" con clientes a facturar en la misma carpeta que nuestro script, con el formato:
-  CUIL       | CONDICION
-  {Nro Cuil} | {Nro Condicion}
-  {Nro Cuil} | {Nro Condicion}
-  {Nro Cuil} | {Nro Condicion}
+  CUIL       | CONDITION       | AMOUNT
+  {Cuil Number} | {Condition Number} | {Amount Number}
+  {Cuil Number} | {Condition Number} | {Amount Number}
+  {Cuil Number} | {Condition Number} | {Amount Number}
 ### Los numeros de condicion para tener referencia son:
 ### Responsable Inscripto = 1
 ### Consumidor Final = 3

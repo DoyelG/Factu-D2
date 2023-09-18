@@ -5,12 +5,16 @@ from selenium.webdriver.support.ui import Select
 from pandas import *
 import time
 
+chrome_options = webdriver.ChromeOptions()
+chrome_options.binary_location = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
+chrome_options.add_argument('--disable-gpu')
 
-driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
-options = webdriver.ChromeOptions()
-options.add_argument("start-maximized")
-options.add_argument("disable-infobars")
-options.add_argument("--disable-extensions")
+driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
+# driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
+# options = webdriver.ChromeOptions()
+# options.add_argument("start-maximized")
+# options.add_argument("disable-infobars")
+# options.add_argument("--disable-extensions")
 
 
 accountData = read_csv("account.csv", dtype=str)
@@ -105,7 +109,7 @@ def generateInvoice(cuil, condition, amount):
     cuilInput.send_keys(cuil)
     findElementAndClick("//form[@id='formulario']")
     time.sleep(0.5)
-    findElementAndClick("//input[@id='formadepago1']")
+    findElementAndClick("//input[@id='formadepago4']")
     nextStep()
 
     service = findElement("//textarea[@id='detalle_descripcion1']")
