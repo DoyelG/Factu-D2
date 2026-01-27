@@ -84,11 +84,17 @@ def generateInvoice(cuil, condition, amount):
     concept = Select(findElement("//select[@id='idconcepto']"))
     concept.select_by_index("2")
     findElementAndClick("//input[@id='fsd_btn']")
+    # previousMonth = findElements("//td[contains(@class, 'nav') and (contains(@class, 'button'))]")
+    # previousMonth[1].click()
+    # findElementAndClick("//input[@id='fsd_btn']")
     currentMonthDaysSince = findElements(
         "//td[contains(@class, 'day') and not(contains(@class, 'othermonth')) and not(contains(@class, 'wn')) and not(contains(@class, 'name'))]"
     )
     currentMonthDaysSince[0].click()
     findElementAndClick("//input[@id='fsh_btn']")
+    # previousMonth2 = findElements("//td[contains(@class, 'nav') and (contains(@class, 'button'))]")
+    # previousMonth2[1].click()
+    # findElementAndClick("//input[@id='fsh_btn']")
     currentMonthDaysTo = findElements(
         "//td[contains(@class, 'day') and not(contains(@class, 'othermonth')) and not(contains(@class, 'wn')) and not(contains(@class, 'name'))]"
     )
@@ -112,7 +118,7 @@ def generateInvoice(cuil, condition, amount):
     nextStep()
 
     findElementAndClick("//input[@id='btngenerar']")
-    driver.switch_to.alert.accept()
+    findElementAndClick("//span[text()='Confirmar']")
 
     findElementAndClick("//input[@value='Menú Principal']")
 
